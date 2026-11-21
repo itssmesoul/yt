@@ -2,403 +2,617 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Swiss Kit</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#0E1013;--panel:#151820;--raise:#222733;--line:#2A2F3A;--text:#ECEEF2;--dim:#9BA3B1;--red:#C8211C;--green:#4ADE80}
+:root{
+  --bg:#0E1013;--panel:#151820;--panel2:#222733;--line:#2A2F3A;
+  --text:#ECEEF2;--muted:#9BA3B1;--red:#C8211C;--green:#4ADE80;--warn:#F5A524;
+  --sans:'Inter Tight',system-ui,'Segoe UI',sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,Consolas,monospace;
+}
 *{box-sizing:border-box}
-html,body{margin:0;height:100%;background:var(--bg)}
-body{display:flex;color:var(--text);font-family:'Inter Tight',system-ui,'Segoe UI',sans-serif;overflow:hidden;user-select:none}
+html,body{margin:0}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);display:flex;min-height:100vh}
 button{font-family:inherit;cursor:pointer}
-button:disabled{cursor:default;opacity:.45}
-.mono{font-family:'JetBrains Mono',ui-monospace,Consolas,monospace}
-.label{font-family:'JetBrains Mono',ui-monospace,Consolas,monospace;font-size:11px;letter-spacing:.12em;color:var(--dim)}
+button:disabled{opacity:.5;cursor:not-allowed}
+:focus-visible{outline:2px solid #fff;outline-offset:2px}
+.hidden,[hidden]{display:none!important}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 
-aside{width:248px;flex:none;background:var(--panel);border-right:1px solid var(--line);padding:28px 20px;display:flex;flex-direction:column;gap:28px}
-.brand{display:flex;align-items:center;gap:12px}
-.brand i{width:36px;height:36px;border-radius:8px;background:var(--red);display:flex;align-items:center;justify-content:center}
-.brand b{font-size:20px;font-weight:700;letter-spacing:-.02em}
+/* sidebar */
+aside{width:248px;flex:none;background:var(--panel);border-right:1px solid var(--line);padding:24px 16px;display:flex;flex-direction:column;gap:22px;position:sticky;top:0;height:100vh;overflow:auto}
+.brand{display:flex;align-items:center;gap:12px;font-size:20px;font-weight:700;letter-spacing:-.02em;padding:0 4px}
+.logo{width:36px;height:36px;border-radius:8px;background:var(--red);display:flex;align-items:center;justify-content:center}
+.group-label{font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:var(--muted);padding:0 8px 8px}
 nav{display:flex;flex-direction:column;gap:4px}
-nav .label{padding:0 12px 8px}
-.nav{display:flex;align-items:center;gap:12px;height:44px;padding:0 12px;border-radius:8px;border:0;background:transparent;color:var(--dim);font-size:15px;font-weight:500;text-align:left}
-.nav svg{stroke:var(--dim)}
-.nav:hover{background:#1b1f29}
-.nav.on{background:var(--raise);color:var(--text);font-weight:600}
-.nav.on svg{stroke:var(--text)}
-.side-foot{margin-top:auto;border-top:1px solid var(--line);padding-top:16px;font-family:'JetBrains Mono',ui-monospace,Consolas,monospace;font-size:12px;line-height:1.6;color:var(--dim)}
-.dir{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
-.dir .path{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;direction:rtl;text-align:left;color:var(--text)}
-.dir button{align-self:flex-start;height:30px;padding:0 12px;border-radius:8px;border:1px solid var(--line);background:transparent;color:var(--dim);font-family:inherit;font-size:12px}
-.dir button:hover{color:var(--text);border-color:var(--dim)}
+nav.grid{display:grid;grid-template-columns:1fr 1fr;gap:4px}
+.nav-btn{display:flex;align-items:center;gap:12px;height:44px;padding:0 12px;border-radius:8px;border:0;background:transparent;color:var(--muted);font-size:15px;font-weight:500;text-align:left}
+.grid .nav-btn{height:38px;padding:0 10px;font-size:13.5px;gap:0;min-width:0;overflow:hidden;white-space:nowrap}
+.grid .nav-btn.wide{grid-column:1/-1}
+.nav-btn:hover{background:#1b1f29;color:var(--text)}
+.nav-btn[aria-current="page"]{background:var(--panel2);color:var(--text);font-weight:600}
+.nav-btn svg{flex:none;stroke:currentColor}
+.side-foot{margin-top:auto;border-top:1px solid var(--line);padding:16px 8px 0;font-family:var(--mono);font-size:12px;line-height:1.6;color:var(--muted);display:flex;flex-direction:column;gap:8px}
+.status{display:flex;align-items:center;gap:8px}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--muted)}
+.dot.ok{background:var(--green)}.dot.bad{background:var(--red)}
+.linkbtn{background:none;border:0;padding:0;color:var(--text);font:inherit;text-decoration:underline;text-align:left}
+.outdir{word-break:break-all}
+.lang{display:flex;align-items:center;gap:10px}
+.lang .seg{padding:3px}
+.lang .seg button{height:30px;padding:0 12px;font-size:12px;font-family:var(--mono)}
 
-main{flex:1;min-width:0;padding:40px 48px;display:flex;flex-direction:column;gap:28px;overflow-y:auto}
+/* main */
+main{flex:1;min-width:0;padding:40px 48px;display:flex;flex-direction:column;gap:28px;max-width:1100px}
 h1{margin:0;font-size:34px;font-weight:700;letter-spacing:-.03em}
-.sub{margin:8px 0 0;font-size:16px;color:var(--dim)}
-.banner{background:#2a1716;border:1px solid #5a2220;color:#f3b3b0;border-radius:10px;padding:12px 16px;font-size:14px;line-height:1.5}
-.banner code{font-family:'JetBrains Mono',ui-monospace,Consolas,monospace;font-size:13px;color:#fff}
-
+.sub{margin:8px 0 0;font-size:16px;color:var(--muted)}
 .row{display:flex;gap:12px}
-#url{flex:1;min-width:0;height:52px;border-radius:10px;border:1px solid var(--line);background:var(--panel);color:var(--text);font-family:'JetBrains Mono',ui-monospace,Consolas,monospace;font-size:14px;padding:0 16px;user-select:text;outline:none}
-#url:focus{border-color:var(--dim)}
-.fetch{height:52px;padding:0 28px;border-radius:10px;border:0;background:var(--red);color:#fff;font-size:16px;font-weight:600}
-.fetch:hover:not(:disabled){filter:brightness(1.1)}
-.err{color:#f3b3b0;font-size:14px;margin-top:-16px;user-select:text}
+input[type=text]{flex:1;min-width:0;height:52px;border-radius:10px;border:1px solid var(--line);background:var(--panel);color:var(--text);font-family:var(--mono);font-size:14px;padding:0 16px}
+input[type=text]::placeholder{color:#6d7585}
+.btn{height:52px;padding:0 28px;border-radius:10px;border:0;font-size:16px;font-weight:600}
+.btn-red{background:var(--red);color:#fff}
+.btn-red:hover:not(:disabled){background:#d9302a}
+.btn-light{height:44px;padding:0 24px;font-size:15px;font-weight:700;background:var(--text);color:var(--bg);display:flex;align-items:center;gap:10px}
+.btn-light:hover:not(:disabled){background:#fff}
+.msg{min-height:20px;font-size:14px;color:var(--warn)}
+.msg.err{color:#ff8a84}
+.hint{font-size:13px;color:var(--muted);margin:-8px 0 0}
 
 .card{display:flex;gap:24px;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px}
-.card.idle .meta,.card.idle .ctrl{opacity:.55}
-.thumb{width:264px;height:148px;flex:none;border-radius:10px;background:var(--raise);display:flex;align-items:center;justify-content:center;overflow:hidden}
-.thumb img{width:100%;height:100%;object-fit:cover}
-.info{flex:1;display:flex;flex-direction:column;gap:16px;min-width:0}
-.ttl{font-size:20px;font-weight:600;letter-spacing:-.01em;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;user-select:text}
-.by{margin-top:6px;font-size:14px;color:var(--dim)}
-.ctrl{display:flex;gap:24px;align-items:center;flex-wrap:wrap}
+.thumb{width:264px;height:148px;flex:none;border-radius:10px;background:var(--panel2);object-fit:cover;display:block}
+.card-body{flex:1;min-width:0;display:flex;flex-direction:column;gap:16px}
+.vtitle{font-size:20px;font-weight:600;letter-spacing:-.01em;overflow-wrap:anywhere}
+.vmeta{margin-top:6px;font-size:14px;color:var(--muted)}
+.opts{display:flex;gap:24px;align-items:center;flex-wrap:wrap}
 .seg{display:flex;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:4px}
-.seg button{height:40px;padding:0 24px;border-radius:7px;border:0;background:transparent;color:var(--dim);font-size:15px;font-weight:600}
-.seg button.on{background:var(--red);color:#fff}
-.pills{display:flex;gap:8px;flex-wrap:wrap}
-.pill{height:40px;padding:0 16px;border-radius:20px;border:1px solid var(--line);background:transparent;color:var(--dim);font-family:'JetBrains Mono',ui-monospace,Consolas,monospace;font-size:13px}
-.pill.on{border-color:var(--text);color:var(--text)}
-.dl{align-self:flex-start;height:44px;padding:0 24px;border-radius:10px;border:0;background:var(--text);color:var(--bg);font-size:15px;font-weight:700;display:flex;align-items:center;gap:10px}
-.dl:hover:not(:disabled){background:#fff}
+.seg button{height:40px;padding:0 24px;border-radius:7px;border:0;background:transparent;color:var(--muted);font-size:15px;font-weight:600}
+.seg button[aria-pressed="true"]{background:var(--red);color:#fff}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{height:40px;padding:0 16px;border-radius:20px;border:1px solid var(--line);background:transparent;color:var(--muted);font-family:var(--mono);font-size:13px}
+.chip:hover{border-color:var(--muted);color:var(--text)}
+.chip[aria-pressed="true"]{border-color:var(--text);color:var(--text)}
 
-.drop{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;min-height:190px;border:1.5px dashed var(--line);border-radius:14px;background:var(--panel);color:var(--dim);font-size:15px;text-align:center;padding:24px}
-.drop.over{border-color:var(--red);color:var(--text)}
-.drop .ctrl{justify-content:center}
-.drop .dl{align-self:center}
+.drop{border:2px dashed var(--line);border-radius:14px;background:var(--panel);padding:44px 24px;text-align:center;color:var(--muted);font-size:16px;cursor:pointer;width:100%}
+.drop strong{display:block;color:var(--text);font-size:20px;margin-bottom:6px}
+.drop:hover,.drop.over{border-color:var(--red);color:var(--text)}
+.field-label{font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:var(--muted);margin-bottom:10px}
+.quality{display:flex;align-items:center;gap:14px;font-family:var(--mono);font-size:13px;color:var(--muted)}
+.quality input{width:220px;accent-color:var(--red)}
 
-.cols{display:flex;gap:24px}
-.cols>div{display:flex;flex-direction:column;gap:12px;min-width:0}
-.q{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;gap:10px;font-size:14px}
-.q .top{display:flex;justify-content:space-between;gap:16px}
-.q .top span:first-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
-.q .st{font-family:'JetBrains Mono',ui-monospace,Consolas,monospace;color:var(--dim);flex:none}
-.q .st.ok{color:var(--green)}
-.q .st.bad{color:#f87171}
-.q.done{cursor:pointer}
-.q.done:hover{border-color:var(--dim)}
-.bar{height:6px;border-radius:3px;background:var(--raise);overflow:hidden}
-.bar>div{height:6px;border-radius:3px;background:var(--red);transition:width .2s}
-.bar.ind>div{width:35%!important;animation:ind 1.1s ease-in-out infinite alternate}
-@keyframes ind{from{margin-left:0}to{margin-left:65%}}
-.empty{color:var(--dim);font-size:14px;border:1px dashed var(--line);border-radius:12px;padding:14px 16px}
-.err-msg{color:#f3b3b0;font-size:13px;user-select:text;word-break:break-word}
-.qc{display:flex;flex-wrap:wrap;gap:8px}
-.qc button{height:40px;padding:0 14px;border-radius:8px;border:1px solid var(--line);background:var(--panel);color:var(--text);font-family:'JetBrains Mono',ui-monospace,Consolas,monospace;font-size:13px}
-.qc button:hover{border-color:var(--dim)}
+.bottom{display:flex;gap:24px;align-items:flex-start}
+.col{display:flex;flex-direction:column;gap:12px;min-width:0}
+.col.q{flex:1.2}.col.qc{flex:1}
+.col-head{display:flex;justify-content:space-between;align-items:center}
+.item{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;gap:10px}
+.item-top{display:flex;justify-content:space-between;gap:12px;font-size:14px}
+.item-top .name{overflow-wrap:anywhere}
+.item-top .st{font-family:var(--mono);color:var(--muted);white-space:nowrap}
+.st.done{color:var(--green)}.st.error{color:#ff8a84}
+.bar{height:6px;border-radius:3px;background:var(--panel2);overflow:hidden}
+.bar i{display:block;height:6px;border-radius:3px;background:var(--red)}
+.bar i.ind{width:35%;animation:slide 1.2s linear infinite}
+@keyframes slide{from{margin-left:-35%}to{margin-left:100%}}
+@media (prefers-reduced-motion:reduce){.bar i.ind{animation:none;width:100%;opacity:.5}}
+.errtext{font-size:13px;color:#ff8a84;overflow-wrap:anywhere}
+.empty{font-size:14px;color:var(--muted);padding:8px 0}
+.quick{display:flex;flex-wrap:wrap;gap:8px}
+.q-btn{height:40px;padding:0 14px;border-radius:8px;border:1px solid var(--line);background:var(--panel);color:var(--text);font-family:var(--mono);font-size:13px}
+.q-btn:hover{border-color:var(--muted)}
+.mini{height:32px;padding:0 12px;border-radius:8px;border:1px solid var(--line);background:transparent;color:var(--text);font-size:13px;align-self:flex-start}
+.mini:hover{border-color:var(--muted)}
+
+@media (max-width:900px){
+  body{flex-direction:column}
+  aside{position:static;width:auto;height:auto;border-right:0;border-bottom:1px solid var(--line);padding:16px}
+  .side-foot{margin-top:0}
+  main{padding:24px 16px}
+  .card{flex-direction:column}.thumb{width:100%;height:auto;aspect-ratio:16/9}
+  .bottom{flex-direction:column;align-self:stretch}.col{width:100%}
+}
 </style>
 </head>
 <body>
 <aside>
   <div class="brand">
-    <i><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#fff" stroke-width="3.5" aria-hidden="true"><path d="M10 3v14M3 10h14"/></svg></i>
-    <b>Swiss Kit</b>
+    <div class="logo"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#fff" stroke-width="3.5" aria-hidden="true"><path d="M10 3v14M3 10h14"/></svg></div>
+    Swiss Kit
   </div>
-  <nav>
-    <div class="label">DOWNLOAD</div>
-    <button class="nav" data-page="youtube"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="4"/><path d="M10 9l5 3-5 3z"/></svg>YouTube</button>
-    <button class="nav" data-page="tiktok"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3v11a4 4 0 1 1-4-4"/><path d="M14 3c0 3 2 5 5 5"/></svg>TikTok</button>
-  </nav>
-  <nav>
-    <div class="label">CONVERT</div>
-    <button class="nav" data-page="images"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="9" cy="9" r="2"/><path d="M21 16l-5-5-9 9"/></svg>Images</button>
-    <button class="nav" data-page="audio"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>Audio</button>
-    <button class="nav" data-page="video"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="M2 9h20M7 4v5M17 4v5"/></svg>Video</button>
-  </nav>
+  <div>
+    <div class="group-label" data-i18n="nav.download"></div>
+    <nav class="grid" id="siteNav" data-i18n-aria="nav.download"></nav>
+  </div>
+  <div>
+    <div class="group-label" data-i18n="nav.convert"></div>
+    <nav id="convNav"></nav>
+  </div>
   <div class="side-foot">
-    <div class="dir">
-      <span class="label">DOWNLOADS TO</span>
-      <span class="path" id="dirPath" title=""></span>
-      <button id="dirBtn">Change</button>
+    <div class="status"><span class="dot" id="dotYt"></span><span>yt-dlp</span></div>
+    <div class="status"><span class="dot" id="dotFf"></span><span>ffmpeg</span></div>
+    <div data-i18n="side.saving"></div>
+    <div class="outdir" id="outdir">…</div>
+    <button class="linkbtn" id="openFolder" data-i18n="side.open"></button>
+    <div class="lang">
+      <span data-i18n="side.lang"></span>
+      <div class="seg" role="group" id="langSeg" data-i18n-aria="side.lang">
+        <button type="button" data-lang="en" aria-pressed="true">EN</button>
+        <button type="button" data-lang="tr" aria-pressed="false">TR</button>
+      </div>
     </div>
-    Built in Rust<br>Runs locally
   </div>
 </aside>
 
 <main>
-  <div id="banner"></div>
-  <div><h1 id="title"></h1><p class="sub" id="sub"></p></div>
-  <div id="page" style="display:flex;flex-direction:column;gap:28px"></div>
+  <div>
+    <h1 id="title"></h1>
+    <p class="sub" id="sub"></p>
+  </div>
 
-  <section class="cols">
-    <div style="flex:1.2">
-      <div class="label">QUEUE</div>
-      <div id="queue"></div>
+  <div id="toolsMsg" class="msg err hidden" role="alert"></div>
+
+  <!-- download views -->
+  <section id="dlView" class="hidden" style="display:flex;flex-direction:column;gap:20px">
+    <form class="row" id="fetchForm">
+      <label style="flex:1;display:flex"><span class="sr" data-i18n="dl.linklabel"></span>
+        <input type="text" id="url" autocomplete="off" spellcheck="false">
+      </label>
+      <button class="btn btn-red" id="fetchBtn" type="submit" data-i18n="dl.fetch"></button>
+    </form>
+    <p class="hint hidden" id="siteHint"></p>
+    <div class="msg" id="dlMsg" role="alert"></div>
+    <div class="card hidden" id="card">
+      <img class="thumb" id="thumb" alt="" referrerpolicy="no-referrer">
+      <div class="card-body">
+        <div>
+          <div class="vtitle" id="vTitle"></div>
+          <div class="vmeta" id="vMeta"></div>
+        </div>
+        <div class="opts">
+          <div class="seg" role="group" id="fmtSeg" data-i18n-aria="dl.format">
+            <button type="button" data-fmt="mp4" aria-pressed="true">MP4</button>
+            <button type="button" data-fmt="mp3" aria-pressed="false">MP3</button>
+          </div>
+          <div class="chips" role="group" id="heights" data-i18n-aria="dl.quality"></div>
+        </div>
+        <button class="btn btn-light" id="dlBtn" type="button">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0E1013" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v13M6 11l6 6 6-6M4 21h16"/></svg>
+          <span id="dlLabel">Download MP4</span>
+        </button>
+      </div>
     </div>
-    <div style="flex:1">
-      <div class="label">QUICK CONVERT</div>
-      <div class="qc" id="qc"></div>
+  </section>
+
+  <!-- convert views -->
+  <section id="cvView" class="hidden" style="display:flex;flex-direction:column;gap:20px">
+    <div>
+      <div class="field-label" data-i18n="cv.to"></div>
+      <div class="chips" role="group" id="targets" data-i18n-aria="cv.to"></div>
+    </div>
+    <div class="quality hidden" id="qualityWrap">
+      <label for="quality" data-i18n="cv.quality"></label>
+      <input type="range" id="quality" min="40" max="100" value="90">
+      <span id="qualityVal">90</span>
+    </div>
+    <button class="drop" id="drop" type="button">
+      <strong data-i18n="cv.drop"></strong>
+      <span data-i18n="cv.click"></span>
+    </button>
+    <input type="file" id="file" class="sr" multiple tabindex="-1" aria-hidden="true">
+    <div class="msg" id="cvMsg" role="alert"></div>
+  </section>
+
+  <section class="bottom">
+    <div class="col q">
+      <div class="col-head">
+        <div class="group-label" style="padding:0" data-i18n="q.title"></div>
+        <button class="mini" id="clearBtn" type="button" data-i18n="q.clear"></button>
+      </div>
+      <div class="col" id="queue" aria-live="polite"></div>
+    </div>
+    <div class="col qc">
+      <div class="group-label" style="padding:0" data-i18n="quick.title"></div>
+      <div class="quick" id="quick"></div>
     </div>
   </section>
 </main>
 
 <script>
-const T = window.__TAURI__;
-const invoke = T.core.invoke;
-const $ = (s, r = document) => r.querySelector(s);
-const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
-
-const DL_ICON = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0E1013" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v13M6 11l6 6 6-6M4 21h16"/></svg>';
-const PLAY_ICON = '<svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#9BA3B1" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M10 8.5l5 3.5-5 3.5z"/></svg>';
-
-const PAGES = {
-  youtube: { kind: 'dl', title: 'YouTube downloader', sub: 'Paste a link, pick a format, save it.', ph: 'https://youtube.com/watch?v=...' },
-  tiktok:  { kind: 'dl', title: 'TikTok downloader', sub: 'Paste a link, pick a format, save it.', ph: 'https://www.tiktok.com/@user/video/...' },
-  images:  { kind: 'conv', title: 'Image converter', sub: 'Drop images here or pick them, then choose the target format.',
-             exts: ['webp','png','jpg','jpeg','gif','bmp','tif','tiff','heic','heif'], targets: ['jpg','png','webp','gif','bmp','tiff'] },
-  audio:   { kind: 'conv', title: 'Audio converter', sub: 'Drop audio files here or pick them, then choose the target format.',
-             exts: ['mp3','wav','m4a','aac','ogg','flac','wma','opus'], targets: ['mp3','wav','m4a','ogg','flac'] },
-  video:   { kind: 'conv', title: 'Video converter', sub: 'Drop videos here or pick them, then choose the target format.',
-             exts: ['mp4','mov','mkv','avi','webm','gif','flv','wmv'], targets: ['mp4','webm','gif','mp3'] },
+const $ = s => document.querySelector(s);
+const h = (tag, props = {}, ...kids) => {
+  const e = document.createElement(tag);
+  for (const [k, v] of Object.entries(props)) {
+    if (k === 'class') e.className = v;
+    else if (k.startsWith('on')) e.addEventListener(k.slice(2), v);
+    else if (v !== false && v != null) e.setAttribute(k, v === true ? '' : v);
+  }
+  for (const kid of kids.flat()) e.append(kid);
+  return e;
 };
+
+/* ---------------- translations ---------------- */
+const I18N = {
+  en: {
+    'nav.download': 'DOWNLOAD', 'nav.convert': 'CONVERT',
+    'nav.images': 'Images', 'nav.audio': 'Audio', 'nav.video': 'Video',
+    'site.other': 'Any site',
+    'side.saving': 'Saving to:', 'side.open': 'Open folder', 'side.lang': 'Language',
+    'dl.title': '{site} downloader', 'dl.title.other': 'Download from any site',
+    'dl.sub': 'Paste a link, pick a format, save it.',
+    'dl.sub.other': 'Paste a link from almost any video or audio site.',
+    'dl.linklabel': 'Video link', 'dl.fetch': 'Fetch', 'dl.fetching': 'Fetching…',
+    'dl.format': 'Format', 'dl.quality': 'Quality', 'dl.original': 'Original',
+    'dl.available': '{q}p available', 'dl.download': 'Download {fmt}', 'dl.empty': 'Paste a link first.',
+    'hint.login': 'Only public posts work. Private or login-only posts cannot be downloaded.',
+    'hint.soundcloud': 'SoundCloud is audio only, so downloads are saved as MP3.',
+    'hint.other': 'Works with many sites. If a site is not supported you will see an error.',
+    'cv.images.title': 'Image converter', 'cv.images.sub': 'Drop images and pick the format you want.',
+    'cv.audio.title': 'Audio converter', 'cv.audio.sub': 'Convert between common audio formats.',
+    'cv.video.title': 'Video converter', 'cv.video.sub': 'Convert videos, or pull the audio out as MP3.',
+    'cv.to': 'CONVERT TO', 'cv.quality': 'JPG quality',
+    'cv.drop': 'Drop files here', 'cv.click': 'or click to choose',
+    'q.title': 'QUEUE', 'q.clear': 'Clear finished', 'q.empty': 'Nothing here yet.',
+    'q.added': 'Added to the queue.', 'q.addedN': '{n} files added to the queue.',
+    'q.show': 'Show in folder',
+    'st.done': 'Done', 'st.failed': 'Failed', 'st.starting': 'Starting…', 'st.converting': 'Converting…',
+    'quick.title': 'QUICK CONVERT',
+    'tools.missing': 'Not found on this PC: {tools}. Downloads and some conversions need these tools. Image conversion still works.',
+    'err.generic': 'Something went wrong.',
+    'err.network': 'Could not reach Swiss Kit. Is the black window still open?',
+    'err.invalid_url': 'That does not look like a valid link.',
+    'err.wrong_platform': 'That link does not belong to {site}.',
+    'err.tool_missing': '{tool} was not found on this PC. Run "Install tools.bat".',
+    'err.tool_failed': '{tool} failed: {message}',
+    'err.unsupported_format': 'Unsupported format: {format}',
+    'err.heic': 'HEIC photos are not supported yet.',
+    'err.unknown_extension': 'Could not tell the file type of {file}.',
+    'err.image_error': 'Image error: {message}',
+    'err.io_error': 'File error: {message}',
+    'err.bad_format': 'Choose MP3 or MP4.',
+    'err.unknown_platform': 'Unknown site.',
+    'err.no_filename': 'The file has no name.',
+    'err.unknown_kind': 'Unknown conversion type.',
+    'err.receive_failed': 'Could not receive the file.',
+    'err.no_file': 'No file was received.',
+    'err.no_job_file': 'That item has no file.',
+    'err.bad_request': 'Bad request: {message}',
+  },
+  tr: {
+    'nav.download': 'İNDİR', 'nav.convert': 'DÖNÜŞTÜR',
+    'nav.images': 'Görseller', 'nav.audio': 'Ses', 'nav.video': 'Video',
+    'site.other': 'Herhangi bir site',
+    'side.saving': 'Kayıt yeri:', 'side.open': 'Klasörü aç', 'side.lang': 'Dil',
+    'dl.title': '{site} indirici', 'dl.title.other': 'Herhangi bir siteden indir',
+    'dl.sub': 'Bağlantıyı yapıştırın, biçimi seçin, kaydedin.',
+    'dl.sub.other': 'Hemen hemen her video veya ses sitesinden bir bağlantı yapıştırın.',
+    'dl.linklabel': 'Video bağlantısı', 'dl.fetch': 'Getir', 'dl.fetching': 'Getiriliyor…',
+    'dl.format': 'Biçim', 'dl.quality': 'Kalite', 'dl.original': 'Orijinal',
+    'dl.available': '{q}p mevcut', 'dl.download': '{fmt} indir', 'dl.empty': 'Önce bir bağlantı yapıştırın.',
+    'hint.login': 'Yalnızca herkese açık gönderiler çalışır. Özel veya giriş gerektiren gönderiler indirilemez.',
+    'hint.soundcloud': 'SoundCloud yalnızca ses içerir, bu yüzden indirmeler MP3 olarak kaydedilir.',
+    'hint.other': 'Birçok siteyle çalışır. Site desteklenmiyorsa bir hata görürsünüz.',
+    'cv.images.title': 'Görsel dönüştürücü', 'cv.images.sub': 'Görselleri bırakın ve istediğiniz biçimi seçin.',
+    'cv.audio.title': 'Ses dönüştürücü', 'cv.audio.sub': 'Yaygın ses biçimleri arasında dönüştürün.',
+    'cv.video.title': 'Video dönüştürücü', 'cv.video.sub': 'Videoları dönüştürün ya da sesi MP3 olarak çıkarın.',
+    'cv.to': 'ŞUNA DÖNÜŞTÜR', 'cv.quality': 'JPG kalitesi',
+    'cv.drop': 'Dosyaları buraya bırakın', 'cv.click': 'ya da seçmek için tıklayın',
+    'q.title': 'SIRA', 'q.clear': 'Bitenleri temizle', 'q.empty': 'Henüz bir şey yok.',
+    'q.added': 'Sıraya eklendi.', 'q.addedN': '{n} dosya sıraya eklendi.',
+    'q.show': 'Klasörde göster',
+    'st.done': 'Bitti', 'st.failed': 'Başarısız', 'st.starting': 'Başlıyor…', 'st.converting': 'Dönüştürülüyor…',
+    'quick.title': 'HIZLI DÖNÜŞTÜR',
+    'tools.missing': 'Bu bilgisayarda bulunamadı: {tools}. İndirmeler ve bazı dönüştürmeler bu araçlara ihtiyaç duyar. Görsel dönüştürme yine de çalışır.',
+    'err.generic': 'Bir şeyler ters gitti.',
+    'err.network': "Swiss Kit'e ulaşılamadı. Siyah pencere hâlâ açık mı?",
+    'err.invalid_url': 'Bu geçerli bir bağlantıya benzemiyor.',
+    'err.wrong_platform': 'Bu bir {site} bağlantısı değil.',
+    'err.tool_missing': '{tool} bu bilgisayarda bulunamadı. "Install tools.bat" dosyasını çalıştırın.',
+    'err.tool_failed': '{tool} başarısız oldu: {message}',
+    'err.unsupported_format': 'Desteklenmeyen biçim: {format}',
+    'err.heic': 'HEIC fotoğraflar henüz desteklenmiyor.',
+    'err.unknown_extension': '{file} dosyasının türü anlaşılamadı.',
+    'err.image_error': 'Görsel hatası: {message}',
+    'err.io_error': 'Dosya hatası: {message}',
+    'err.bad_format': 'MP3 veya MP4 seçin.',
+    'err.unknown_platform': 'Bilinmeyen site.',
+    'err.no_filename': 'Dosyanın adı yok.',
+    'err.unknown_kind': 'Bilinmeyen dönüştürme türü.',
+    'err.receive_failed': 'Dosya alınamadı.',
+    'err.no_file': 'Hiç dosya alınmadı.',
+    'err.no_job_file': 'Bu öğenin dosyası yok.',
+    'err.bad_request': 'Hatalı istek: {message}',
+  },
+};
+
+let lang = 'en';
+try {
+  const saved = localStorage.getItem('swiss-kit-lang');
+  lang = saved === 'tr' || saved === 'en' ? saved : ((navigator.language || '').toLowerCase().startsWith('tr') ? 'tr' : 'en');
+} catch { lang = (navigator.language || '').toLowerCase().startsWith('tr') ? 'tr' : 'en'; }
+
+function t(key, args = {}) {
+  const s = (I18N[lang] && I18N[lang][key]) ?? I18N.en[key] ?? key;
+  return s.replace(/\{(\w+)\}/g, (_, k) => (args[k] ?? ''));
+}
+const hasKey = key => !!((I18N[lang] && I18N[lang][key]) || I18N.en[key]);
+
+function errText(code, args, fallback) {
+  if (code === 'unsupported_format' && /heic|heif/i.test((args || {}).format || '')) code = 'heic';
+  const key = 'err.' + code;
+  return code && hasKey(key) ? t(key, args || {}) : (fallback || t('err.generic'));
+}
+
+function applyStatic() {
+  document.documentElement.lang = lang;
+  document.querySelectorAll('[data-i18n]').forEach(e => { e.textContent = t(e.dataset.i18n); });
+  document.querySelectorAll('[data-i18n-aria]').forEach(e => e.setAttribute('aria-label', t(e.dataset.i18nAria)));
+  document.querySelectorAll('#langSeg button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.lang === lang)));
+}
+
+/* ---------------- api ---------------- */
+async function api(path, body) {
+  const opts = body === undefined ? {} : body instanceof FormData
+    ? { method: 'POST', body }
+    : { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) };
+  let r;
+  try { r = await fetch(path, opts); }
+  catch { const e = new Error('network'); e.code = 'network'; throw e; }
+  let data = null;
+  try { data = await r.json(); } catch {}
+  if (!r.ok) {
+    const e = new Error((data && data.error) || `Request failed (${r.status})`);
+    e.code = data && data.code; e.args = data && data.args;
+    throw e;
+  }
+  return data;
+}
+const errOf = e => errText(e.code, e.args, e.message);
+
+/* ---------------- sites and views ---------------- */
+const SITES = [
+  { id: 'youtube', name: 'YouTube', ph: 'https://www.youtube.com/watch?v=...' },
+  { id: 'tiktok', name: 'TikTok', ph: 'https://www.tiktok.com/@name/video/...' },
+  { id: 'instagram', name: 'Instagram', ph: 'https://www.instagram.com/reel/...', hint: 'hint.login' },
+  { id: 'x', name: 'X (Twitter)', short: 'X', ph: 'https://x.com/name/status/...', hint: 'hint.login' },
+  { id: 'facebook', name: 'Facebook', ph: 'https://www.facebook.com/watch/?v=...', hint: 'hint.login' },
+  { id: 'vimeo', name: 'Vimeo', ph: 'https://vimeo.com/...' },
+  { id: 'reddit', name: 'Reddit', ph: 'https://www.reddit.com/r/.../comments/...' },
+  { id: 'soundcloud', name: 'SoundCloud', ph: 'https://soundcloud.com/artist/track', audioOnly: true, hint: 'hint.soundcloud' },
+  { id: 'twitch', name: 'Twitch', ph: 'https://www.twitch.tv/videos/...' },
+  { id: 'dailymotion', name: 'Dailymotion', ph: 'https://www.dailymotion.com/video/...' },
+  { id: 'pinterest', name: 'Pinterest', ph: 'https://www.pinterest.com/pin/...' },
+  { id: 'other', nameKey: 'site.other', ph: 'https://...', hint: 'hint.other' },
+];
+const CONVERTERS = {
+  images: { kind: 'image', accept: '.webp,.png,.jpg,.jpeg,.gif,.bmp,.tif,.tiff', targets: ['jpg', 'png', 'webp', 'gif', 'bmp', 'tiff'], def: 'jpg' },
+  audio:  { kind: 'media', accept: '.mp3,.wav,.m4a,.aac,.ogg,.flac,.opus,.wma', targets: ['mp3', 'wav', 'm4a', 'ogg', 'flac'], def: 'mp3' },
+  video:  { kind: 'media', accept: '.mp4,.mov,.mkv,.webm,.avi,.gif,.m4v', targets: ['mp4', 'webm', 'gif', 'mp3'], def: 'mp4' },
+};
+const VIEWS = {};
+for (const s of SITES) VIEWS[s.id] = { mode: 'dl', ...s };
+for (const [id, c] of Object.entries(CONVERTERS)) VIEWS[id] = { mode: 'cv', ...c };
 
 const QUICK = [
-  ['WEBP','JPG',['webp']], ['PNG','JPG',['png']], ['HEIC','JPG',['heic','heif']],
-  ['MP4','MP3',['mp4']], ['WAV','MP3',['wav']], ['MOV','MP4',['mov']], ['GIF','MP4',['gif']],
+  ['WEBP → JPG', 'images', 'jpg', '.webp'], ['PNG → JPG', 'images', 'jpg', '.png'], ['JPG → PNG', 'images', 'png', '.jpg,.jpeg'],
+  ['MP4 → MP3', 'video', 'mp3', '.mp4'], ['WAV → MP3', 'audio', 'mp3', '.wav'],
+  ['MOV → MP4', 'video', 'mp4', '.mov'], ['GIF → MP4', 'video', 'mp4', '.gif'],
 ];
 
-const state = {
-  page: 'youtube',
-  outDir: localStorage.getItem('outDir') || '',
-  dl: {
-    youtube: { url: '', info: null, format: 'mp4', height: null, busy: false, err: '' },
-    tiktok:  { url: '', info: null, format: 'mp4', height: null, busy: false, err: '' },
-  },
-  conv: { images: 'jpg', audio: 'mp3', video: 'mp4' },
-  jobs: [],
-  nextId: 1,
-};
+const state = { view: 'youtube', fmt: 'mp4', height: null, info: null, url: '', target: {}, audioPrev: false, toolsMissing: [] };
+for (const [k, c] of Object.entries(CONVERTERS)) state.target[k] = c.def;
 
-/* ---------- helpers ---------- */
-const fmtTime = s => {
-  if (s == null) return '';
-  const h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), x = s % 60;
-  const p = n => String(n).padStart(2, '0');
-  return h ? `${h}:${p(m)}:${p(x)}` : `${m}:${p(x)}`;
-};
-const baseName = p => p.split(/[\\/]/).pop();
-const extOf = p => (baseName(p).split('.').pop() || '').toLowerCase();
+const siteName = s => s.nameKey ? t(s.nameKey) : s.name;
+const navLabel = s => s.nameKey ? t(s.nameKey) : (s.short || s.name);
 
-/* ---------- jobs / queue ---------- */
-function addJob(title, indeterminate) {
-  const j = { id: state.nextId++, title, state: 'running', pct: 0, ind: !!indeterminate, path: null, msg: '' };
-  state.jobs.unshift(j);
-  renderQueue();
-  return j;
-}
-
-function renderQueue() {
-  const q = $('#queue');
-  q.replaceChildren();
-  q.style.cssText = 'display:flex;flex-direction:column;gap:12px';
-  if (!state.jobs.length) { q.append(el('div', 'empty', 'Nothing yet. Downloads and conversions show up here.')); return; }
-  for (const j of state.jobs.slice(0, 20)) {
-    const box = el('div', 'q' + (j.state === 'done' ? ' done' : ''));
-    const top = el('div', 'top');
-    top.append(el('span', '', j.title));
-    const st = el('span', 'st');
-    if (j.state === 'running') st.textContent = j.ind ? 'Working…' : `${Math.round(j.pct)}%`;
-    else if (j.state === 'done') { st.textContent = 'Done'; st.classList.add('ok'); }
-    else { st.textContent = 'Failed'; st.classList.add('bad'); }
-    top.append(st);
-    box.append(top);
-    if (j.state === 'running') {
-      const bar = el('div', 'bar' + (j.ind ? ' ind' : ''));
-      const fill = el('div'); fill.style.width = Math.max(2, j.pct) + '%';
-      bar.append(fill); box.append(bar);
-    }
-    if (j.state === 'error') box.append(el('div', 'err-msg', j.msg));
-    if (j.state === 'done' && j.path) { box.title = j.path; box.addEventListener('click', () => invoke('reveal', { path: j.path })); }
-    q.append(box);
+function renderNav() {
+  const grid = $('#siteNav'); grid.replaceChildren();
+  for (const s of SITES) {
+    grid.append(h('button', { class: 'nav-btn' + (s.id === 'other' ? ' wide' : ''), type: 'button', 'data-view': s.id, title: siteName(s),
+      'aria-current': state.view === s.id ? 'page' : false, onclick: () => setView(s.id) }, navLabel(s)));
   }
-}
-
-T.event.listen('job', e => {
-  const { id, kind, percent, path, message } = e.payload;
-  const j = state.jobs.find(x => x.id === id);
-  if (!j) return;
-  if (kind === 'progress') { j.pct = percent ?? j.pct; j.ind = false; }
-  else if (kind === 'done') { j.state = 'done'; j.pct = 100; j.path = path; }
-  else { j.state = 'error'; j.msg = message || 'Unknown error'; }
-  renderQueue();
-});
-
-/* ---------- conversions ---------- */
-async function convertFiles(paths, target) {
-  for (const p of paths) {
-    const j = addJob(`${baseName(p)} → ${target.toUpperCase()}`, true);
-    try { await invoke('start_convert', { id: j.id, input: p, to: target }); }
-    catch (err) { j.state = 'error'; j.msg = String(err); renderQueue(); }
-  }
-}
-
-async function pickFiles(exts) {
-  const sel = await T.dialog.open({ multiple: true, filters: [{ name: 'Files', extensions: exts }] });
-  if (!sel) return [];
-  return Array.isArray(sel) ? sel : [sel];
-}
-
-/* ---------- pages ---------- */
-function renderDl(root, name) {
-  const cfg = PAGES[name], s = state.dl[name];
-
-  const row = el('div', 'row');
-  const input = el('input'); input.id = 'url'; input.type = 'text'; input.placeholder = cfg.ph; input.value = s.url; input.spellcheck = false;
-  const fetchBtn = el('button', 'fetch', s.busy ? 'Fetching…' : 'Fetch'); fetchBtn.disabled = s.busy;
-  row.append(input, fetchBtn);
-  root.append(row);
-  if (s.err) root.append(el('div', 'err', s.err));
-
-  const info = s.info;
-  const card = el('section', 'card' + (info ? '' : ' idle'));
-  const thumb = el('div', 'thumb');
-  if (info && info.thumbnail) { const im = el('img'); im.src = info.thumbnail; im.referrerPolicy = 'no-referrer'; im.onerror = () => { thumb.innerHTML = PLAY_ICON; }; thumb.append(im); }
-  else thumb.innerHTML = PLAY_ICON;
-
-  const col = el('div', 'info');
-  const meta = el('div', 'meta');
-  meta.append(el('div', 'ttl', info ? info.title : 'Video title appears here'));
-  const parts = info
-    ? [info.channel, fmtTime(info.duration), info.heights.length ? `${info.heights[0]}p available` : ''].filter(Boolean)
-    : ['Channel name', '12:34', '1080p available'];
-  meta.append(el('div', 'by', parts.join('  ·  ')));
-  col.append(meta);
-
-  const ctrl = el('div', 'ctrl');
-  const seg = el('div', 'seg');
-  for (const f of ['mp4', 'mp3']) {
-    const b = el('button', s.format === f ? 'on' : '', f.toUpperCase());
-    b.disabled = !info;
-    b.addEventListener('click', () => { s.format = f; render(); });
-    seg.append(b);
-  }
-  ctrl.append(seg);
-
-  if (name === 'youtube' && s.format === 'mp4') {
-    const pills = el('div', 'pills');
-    const avail = info && info.heights.length ? info.heights : [1080, 720, 480];
-    let opts = [1080, 720, 480].filter(h => !info || !info.heights.length || avail.some(a => a >= h));
-    if (!opts.length) opts = [Math.max(...avail)];
-    if (!opts.includes(s.height)) s.height = opts[0];
-    for (const h of opts) {
-      const b = el('button', 'pill' + (s.height === h ? ' on' : ''), `${h}p`);
-      b.disabled = !info;
-      b.addEventListener('click', () => { s.height = h; render(); });
-      pills.append(b);
-    }
-    ctrl.append(pills);
-  }
-  col.append(ctrl);
-
-  const dl = el('button', 'dl');
-  dl.innerHTML = DL_ICON;
-  dl.append(document.createTextNode(`Download ${s.format.toUpperCase()}`));
-  dl.disabled = !info;
-  dl.addEventListener('click', async () => {
-    const j = addJob(info.title, false);
-    try {
-      await invoke('start_download', {
-        id: j.id, platformName: name, url: s.url, format: s.format,
-        maxHeight: name === 'youtube' && s.format === 'mp4' ? s.height : null,
-        outDir: state.outDir,
-      });
-    } catch (err) { j.state = 'error'; j.msg = String(err); renderQueue(); }
-  });
-  col.append(dl);
-  card.append(thumb, col);
-  root.append(card);
-
-  input.addEventListener('input', () => { s.url = input.value; });
-  const doFetch = async () => {
-    s.url = input.value.trim();
-    if (!s.url) return;
-    s.busy = true; s.err = ''; s.info = null; render();
-    try { s.info = await invoke('fetch_info', { platformName: name, url: s.url }); s.height = null; }
-    catch (err) { s.err = String(err); }
-    s.busy = false; render();
+  const conv = $('#convNav'); conv.replaceChildren();
+  const icons = {
+    images: '<rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="9" cy="9" r="2"/><path d="M21 16l-5-5-9 9"/>',
+    audio: '<path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>',
+    video: '<rect x="2" y="4" width="20" height="16" rx="3"/><path d="M2 9h20M7 4v5M17 4v5"/>',
   };
-  fetchBtn.addEventListener('click', doFetch);
-  input.addEventListener('keydown', e => { if (e.key === 'Enter') doFetch(); });
-}
-
-function renderConv(root, name) {
-  const cfg = PAGES[name];
-  const drop = el('div', 'drop'); drop.id = 'drop';
-  drop.append(el('div', '', 'Drop files here'));
-  const ctrl = el('div', 'ctrl');
-  ctrl.append(el('span', 'label', 'CONVERT TO'));
-  const pills = el('div', 'pills');
-  for (const t of cfg.targets) {
-    const b = el('button', 'pill' + (state.conv[name] === t ? ' on' : ''), t.toUpperCase());
-    b.addEventListener('click', () => { state.conv[name] = t; render(); });
-    pills.append(b);
+  for (const id of Object.keys(CONVERTERS)) {
+    const b = h('button', { class: 'nav-btn', type: 'button', 'data-view': id, 'aria-current': state.view === id ? 'page' : false, onclick: () => setView(id) });
+    b.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${icons[id]}</svg>`;
+    b.append(t('nav.' + id));
+    conv.append(b);
   }
-  ctrl.append(pills);
-  drop.append(ctrl);
-  const pick = el('button', 'dl', 'Choose files');
-  pick.addEventListener('click', async () => convertFiles(await pickFiles(cfg.exts), state.conv[name]));
-  drop.append(pick);
-  root.append(drop);
-  root.append(el('div', 'sub', 'Converted files are saved next to the originals and never overwrite anything.'));
 }
 
-function render() {
-  const name = state.page, cfg = PAGES[name];
-  document.querySelectorAll('.nav').forEach(b => b.classList.toggle('on', b.dataset.page === name));
-  $('#title').textContent = cfg.title;
-  $('#sub').textContent = cfg.sub;
-  const root = $('#page');
-  root.replaceChildren();
-  if (cfg.kind === 'dl') renderDl(root, name); else renderConv(root, name);
-  $('#dirPath').textContent = state.outDir;
-  $('#dirPath').title = state.outDir;
-  renderQueue();
+function markNav() {
+  document.querySelectorAll('.nav-btn').forEach(b => {
+    if (b.dataset.view === state.view) b.setAttribute('aria-current', 'page'); else b.removeAttribute('aria-current');
+  });
 }
 
-/* ---------- boot ---------- */
-document.querySelectorAll('.nav').forEach(b => b.addEventListener('click', () => { state.page = b.dataset.page; render(); }));
+function renderChrome() {
+  const v = VIEWS[state.view];
+  if (v.mode === 'dl') {
+    $('#title').textContent = v.id === 'other' ? t('dl.title.other') : t('dl.title', { site: siteName(v) });
+    $('#sub').textContent = v.id === 'other' ? t('dl.sub.other') : t('dl.sub');
+    $('#url').placeholder = v.ph;
+    const hint = $('#siteHint');
+    hint.classList.toggle('hidden', !v.hint);
+    hint.textContent = v.hint ? t(v.hint) : '';
+  } else {
+    $('#title').textContent = t(`cv.${state.view}.title`);
+    $('#sub').textContent = t(`cv.${state.view}.sub`);
+    renderTargets();
+  }
+  $('#dlView').classList.toggle('hidden', v.mode !== 'dl');
+  $('#cvView').classList.toggle('hidden', v.mode !== 'cv');
+  document.title = 'Swiss Kit';
+}
 
-$('#dirBtn').addEventListener('click', async () => {
-  const d = await T.dialog.open({ directory: true, defaultPath: state.outDir || undefined });
-  if (d) { state.outDir = d; localStorage.setItem('outDir', d); render(); }
+function setView(name) {
+  state.view = name;
+  const v = VIEWS[name];
+  markNav();
+  $('#dlMsg').textContent = ''; $('#cvMsg').textContent = '';
+  if (v.mode === 'dl') {
+    $('#url').value = '';
+    state.info = null; $('#card').classList.add('hidden');
+    if (v.audioOnly) state.fmt = 'mp3'; else if (state.audioPrev) state.fmt = 'mp4';
+    state.audioPrev = !!v.audioOnly;
+  } else {
+    $('#file').accept = v.accept;
+  }
+  renderChrome();
+}
+
+function renderTargets() {
+  const v = VIEWS[state.view]; if (v.mode !== 'cv') return;
+  const box = $('#targets'); box.replaceChildren();
+  for (const x of v.targets) {
+    box.append(h('button', { class: 'chip', type: 'button', 'aria-pressed': String(state.target[state.view] === x),
+      onclick: () => { state.target[state.view] = x; renderTargets(); } }, x.toUpperCase()));
+  }
+  $('#qualityWrap').classList.toggle('hidden', !(v.kind === 'image' && state.target[state.view] === 'jpg'));
+}
+
+/* ---------------- downloads ---------------- */
+const fmtTime = s => { if (s == null) return ''; const hh = Math.floor(s / 3600), mm = Math.floor(s % 3600 / 60), ss = s % 60;
+  return (hh ? hh + ':' + String(mm).padStart(2, '0') : mm) + ':' + String(ss).padStart(2, '0'); };
+
+function renderCard() {
+  const i = state.info; if (!i) return;
+  const v = VIEWS[state.view];
+  $('#card').classList.remove('hidden');
+  const th = $('#thumb'); if (i.thumbnail) th.src = i.thumbnail; else th.removeAttribute('src');
+  $('#vTitle').textContent = i.title;
+  $('#vMeta').textContent = [i.uploader, fmtTime(i.duration_secs), i.heights[0] ? t('dl.available', { q: i.heights[0] }) : ''].filter(Boolean).join('  ·  ');
+  document.querySelectorAll('#fmtSeg button').forEach(b => {
+    b.setAttribute('aria-pressed', String(b.dataset.fmt === state.fmt));
+    b.hidden = !!v.audioOnly && b.dataset.fmt === 'mp4';
+  });
+  $('#dlLabel').textContent = t('dl.download', { fmt: state.fmt.toUpperCase() });
+  const box = $('#heights'); box.replaceChildren();
+  box.classList.toggle('hidden', state.fmt !== 'mp4');
+  const std = i.heights.filter(x => [2160, 1440, 1080, 720, 480, 360].includes(x));
+  const opts = std.length ? std : [null];
+  if (!opts.includes(state.height)) state.height = opts.find(x => x == null || x <= 1080) ?? opts[0];
+  for (const x of opts) {
+    box.append(h('button', { class: 'chip', type: 'button', 'aria-pressed': String(state.height === x),
+      onclick: () => { state.height = x; renderCard(); } }, x ? x + 'p' : t('dl.original')));
+  }
+}
+
+$('#fmtSeg').addEventListener('click', e => { const b = e.target.closest('button'); if (b) { state.fmt = b.dataset.fmt; renderCard(); } });
+
+$('#fetchForm').addEventListener('submit', async e => {
+  e.preventDefault();
+  const url = $('#url').value.trim();
+  const msg = $('#dlMsg'); msg.className = 'msg'; msg.textContent = '';
+  if (!url) { msg.textContent = t('dl.empty'); return; }
+  const btn = $('#fetchBtn'); btn.disabled = true; btn.textContent = t('dl.fetching');
+  $('#card').classList.add('hidden');
+  try {
+    state.info = await api('/api/fetch', { platform: VIEWS[state.view].id, url });
+    state.url = url; renderCard();
+  } catch (err) { msg.className = 'msg err'; msg.textContent = errOf(err); }
+  btn.disabled = false; btn.textContent = t('dl.fetch');
 });
 
-const qc = $('#qc');
-for (const [from, to, exts] of QUICK) {
-  const b = el('button', '', `${from} → ${to}`);
-  b.addEventListener('click', async () => convertFiles(await pickFiles(exts), to.toLowerCase()));
-  qc.append(b);
-}
-
-// drag & drop onto converter pages
-T.webview.getCurrentWebview().onDragDropEvent(ev => {
-  const drop = $('#drop');
-  const t = ev.payload.type;
-  if (drop) drop.classList.toggle('over', t === 'over' || t === 'enter');
-  if (t === 'drop' && PAGES[state.page].kind === 'conv') {
-    const cfg = PAGES[state.page];
-    const files = ev.payload.paths.filter(p => cfg.exts.includes(extOf(p)));
-    if (files.length) convertFiles(files, state.conv[state.page]);
-    if (drop) drop.classList.remove('over');
-  }
-  if (t === 'leave' && drop) drop.classList.remove('over');
+$('#dlBtn').addEventListener('click', async () => {
+  const msg = $('#dlMsg'); msg.className = 'msg'; msg.textContent = '';
+  try {
+    await api('/api/download', { platform: VIEWS[state.view].id, url: state.url, format: state.fmt,
+      max_height: state.fmt === 'mp4' ? state.height : null, title: state.info && state.info.title });
+    msg.textContent = t('q.added');
+    refresh();
+  } catch (err) { msg.className = 'msg err'; msg.textContent = errOf(err); }
 });
 
+/* ---------------- conversions ---------------- */
+async function sendFiles(files) {
+  const v = VIEWS[state.view], msg = $('#cvMsg'); msg.className = 'msg'; msg.textContent = '';
+  const to = state.target[state.view]; let failed = 0;
+  for (const f of files) {
+    const fd = new FormData();
+    fd.append('kind', v.kind); fd.append('to', to); fd.append('quality', $('#quality').value); fd.append('file', f);
+    try { await api('/api/convert', fd); } catch (err) { failed++; msg.className = 'msg err'; msg.textContent = f.name + ': ' + errOf(err); }
+  }
+  if (!failed) msg.textContent = files.length === 1 ? t('q.added') : t('q.addedN', { n: files.length });
+  refresh();
+}
+const picker = $('#file');
+$('#drop').addEventListener('click', () => picker.click());
+picker.addEventListener('change', () => { if (picker.files.length) sendFiles([...picker.files]); picker.value = ''; });
+const drop = $('#drop');
+['dragenter', 'dragover'].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.add('over'); }));
+['dragleave', 'drop'].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.remove('over'); }));
+drop.addEventListener('drop', e => { if (e.dataTransfer.files.length) sendFiles([...e.dataTransfer.files]); });
+$('#quality').addEventListener('input', e => { $('#qualityVal').textContent = e.target.value; });
+
+for (const [label, view, to, accept] of QUICK) {
+  $('#quick').append(h('button', { class: 'q-btn', type: 'button', onclick: () => {
+    setView(view); state.target[view] = to; renderTargets(); picker.accept = accept; picker.click();
+  } }, label));
+}
+
+/* ---------------- queue ---------------- */
+let lastJobs = '', lastJobsData = [];
+function renderQueue(jobs) {
+  const box = $('#queue'); box.replaceChildren();
+  if (!jobs.length) { box.append(h('div', { class: 'empty' }, t('q.empty'))); return; }
+  for (const j of [...jobs].reverse()) {
+    const st = j.state === 'done' ? t('st.done') : j.state === 'error' ? t('st.failed')
+      : j.percent != null ? Math.round(j.percent) + '%' : (j.kind === 'convert' ? t('st.converting') : t('st.starting'));
+    const item = h('div', { class: 'item' },
+      h('div', { class: 'item-top' }, h('span', { class: 'name' }, j.label), h('span', { class: 'st ' + j.state }, st)));
+    if (j.state === 'running') {
+      item.append(h('div', { class: 'bar' }, h('i', j.percent != null ? { style: `width:${j.percent}%` } : { class: 'ind' })));
+    }
+    if (j.state === 'error') item.append(h('div', { class: 'errtext' }, errText(j.error_code, j.error_args, j.error)));
+    if (j.state === 'done' && j.file) item.append(h('button', { class: 'mini', type: 'button', onclick: () => api('/api/open', { id: j.id }).catch(() => {}) }, t('q.show')));
+    box.append(item);
+  }
+}
+async function refresh() {
+  try {
+    const jobs = await api('/api/jobs'); const s = JSON.stringify(jobs);
+    lastJobsData = jobs;
+    if (s !== lastJobs) { lastJobs = s; renderQueue(jobs); }
+  } catch {}
+}
+$('#clearBtn').addEventListener('click', async () => { await api('/api/jobs/clear', {}); lastJobs = ''; refresh(); });
+$('#openFolder').addEventListener('click', () => api('/api/open-folder', {}).catch(() => {}));
+
+/* ---------------- language switch ---------------- */
+function renderTools() {
+  const m = $('#toolsMsg');
+  if (state.toolsMissing.length) { m.classList.remove('hidden'); m.textContent = t('tools.missing', { tools: state.toolsMissing.join(', ') }); }
+  else m.classList.add('hidden');
+}
+function setLang(next) {
+  lang = next;
+  try { localStorage.setItem('swiss-kit-lang', lang); } catch {}
+  applyStatic(); renderNav(); renderChrome(); renderTools();
+  if (state.info) renderCard();
+  $('#dlMsg').textContent = ''; $('#cvMsg').textContent = '';
+  renderQueue(lastJobsData);
+  $('#dlLabel').textContent = state.info ? t('dl.download', { fmt: state.fmt.toUpperCase() }) : t('dl.download', { fmt: 'MP4' });
+}
+$('#langSeg').addEventListener('click', e => { const b = e.target.closest('button'); if (b && b.dataset.lang !== lang) setLang(b.dataset.lang); });
+
+/* ---------------- boot ---------------- */
 (async () => {
-  if (!state.outDir) state.outDir = await invoke('default_dir');
-  const st = await invoke('tools_status');
-  const miss = [];
-  if (!st.ytdlp) miss.push('yt-dlp');
-  if (!st.ffmpeg) miss.push('ffmpeg');
-  if (miss.length) {
-    const b = el('div', 'banner');
-    b.append(document.createTextNode('Missing: '));
-    const c = el('code', '', miss.join(', '));
-    b.append(c, document.createTextNode('. Put the program next to Swiss Kit.exe or install it so it is on PATH.'));
-    $('#banner').append(b);
-  }
-  render();
+  applyStatic(); renderNav(); renderChrome();
+  $('#dlLabel').textContent = t('dl.download', { fmt: 'MP4' });
+  try {
+    const c = await api('/api/config');
+    $('#outdir').textContent = c.out_dir;
+    $('#dotYt').classList.add(c.yt_dlp ? 'ok' : 'bad'); $('#dotFf').classList.add(c.ffmpeg ? 'ok' : 'bad');
+    state.toolsMissing = [!c.yt_dlp && 'yt-dlp', !c.ffmpeg && 'ffmpeg'].filter(Boolean);
+    renderTools();
+  } catch {}
+  refresh(); setInterval(refresh, 800);
 })();
 </script>
 </body>

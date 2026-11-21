@@ -24,6 +24,8 @@ enum Cmd {
     Youtube(DlArgs),
     /// Download a TikTok video as mp4 or mp3
     Tiktok(DlArgs),
+    /// Download from any supported site (Instagram, X, Facebook, Vimeo, Reddit, SoundCloud, Twitch, ...)
+    Get(DlArgs),
     /// Convert an image (webp/png/jpg/gif/bmp/tiff)
     Image {
         input: PathBuf,
@@ -84,6 +86,10 @@ async fn main() {
     let result = match cli.cmd {
         Cmd::Youtube(a) => run_download(Platform::YouTube, a).await,
         Cmd::Tiktok(a) => run_download(Platform::TikTok, a).await,
+        Cmd::Get(a) => {
+            let platform = Platform::detect(&a.url);
+            run_download(platform, a).await
+        }
         Cmd::Image { input, to, quality, out_dir } => ImageKind::from_ext(&to)
             .and_then(|k| convert_image(&input, k, quality, out_dir.as_deref()))
             .map(|p| println!("saved: {}", p.display())),

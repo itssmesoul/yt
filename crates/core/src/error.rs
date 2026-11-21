@@ -4,7 +4,7 @@ use std::path::PathBuf;
 pub enum Error {
     #[error("invalid URL: {0}")]
     InvalidUrl(String),
-    #[error("that link is not a {expected} link")]
+    #[error("that link does not belong to {expected}")]
     WrongPlatform { expected: &'static str },
     #[error("required tool `{0}` was not found on PATH")]
     ToolMissing(&'static str),

@@ -1,16 +1,11 @@
 [package]
 name = "swiss-kit-app"
-description = "Swiss Kit desktop app"
-authors = ["WEBTE Yazılım"]
 version.workspace = true
 edition.workspace = true
 
-[build-dependencies]
-tauri-build = { version = "2", features = [] }
-
 [dependencies]
 swiss-kit-core = { path = "../core" }
-tauri = { version = "2", features = [] }
-tauri-plugin-dialog = "2"
+axum = { version = "0.7", features = ["multipart"] }
+tokio = { version = "1", features = ["rt-multi-thread", "macros", "fs", "net", "sync"] }
 serde = { version = "1", features = ["derive"] }
-tokio = { version = "1", features = ["sync", "rt"] }
+serde_json = "1"

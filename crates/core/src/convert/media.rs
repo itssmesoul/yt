@@ -3,10 +3,11 @@ use super::{ext_of, output_path};
 use crate::error::{Error, Result};
 use crate::tools;
 use std::path::{Path, PathBuf};
+use tokio::process::Command;
 
 /// Output formats we know good ffmpeg settings for.
 pub fn supported_targets() -> &'static [&'static str] {
-    &["mp3", "wav", "m4a", "ogg", "flac", "mp4", "webm", "gif", "jpg"]
+    &["mp3", "wav", "m4a", "ogg", "flac", "mp4", "webm", "gif"]
 }
 
 /// ffmpeg arguments (excluding input/output paths) for a target extension.
@@ -17,11 +18,9 @@ pub fn codec_args(target: &str) -> Result<Vec<&'static str>> {
         "m4a" => vec!["-vn", "-c:a", "aac", "-b:a", "192k"],
         "ogg" => vec!["-vn", "-c:a", "libvorbis", "-q:a", "5"],
         "flac" => vec!["-vn", "-c:a", "flac"],
-        "mp4" => vec!["-c:v", "libx264", "-preset", "medium", "-crf", "23", "-pix_fmt", "yuv420p", "-c:a", "aac", "-b:a", "160k", "-movflags", "+faststart"],
+        "mp4" => vec!["-c:v", "libx264", "-preset", "medium", "-crf", "23", "-vf", "scale=trunc(iw/2)*2:trunc(ih/2)*2", "-pix_fmt", "yuv420p", "-c:a", "aac", "-b:a", "160k", "-movflags", "+faststart"],
         "webm" => vec!["-c:v", "libvpx-vp9", "-crf", "32", "-b:v", "0", "-c:a", "libopus"],
         "gif" => vec!["-an", "-vf", "fps=12,scale=480:-1:flags=lanczos"],
-        // single still frame (used for HEIC and video frames)
-        "jpg" => vec!["-frames:v", "1", "-q:v", "2"],
         other => return Err(Error::UnsupportedFormat(other.to_string())),
     })
 }
@@ -42,7 +41,7 @@ pub async fn convert_media(input: &Path, target: &str, out_dir: Option<&Path>) -
     }
     let ffmpeg = tools::find("ffmpeg")?;
     let out = output_path(input, &target, out_dir)?;
-    let result = tools::command(ffmpeg).args(build_args(input, &out, &target)?).output().await?;
+    let result = Command::new(ffmpeg).args(build_args(input, &out, &target)?).output().await?;
     if !result.status.success() {
         let msg = String::from_utf8_lossy(&result.stderr).lines().last().unwrap_or("unknown error").to_string();
         return Err(Error::ToolFailed { tool: "ffmpeg", message: msg });

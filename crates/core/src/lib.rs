@@ -3,6 +3,7 @@
 pub mod convert;
 pub mod download;
 pub mod error;
+pub mod info;
 pub mod tools;
 
 pub use error::{Error, Result};

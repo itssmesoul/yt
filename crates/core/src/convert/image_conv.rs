@@ -25,7 +25,7 @@ impl ImageKind {
             "gif" => Ok(Self::Gif),
             "bmp" => Ok(Self::Bmp),
             "tif" | "tiff" => Ok(Self::Tiff),
-            "heic" | "heif" => Err(Error::UnsupportedFormat("HEIC is not supported yet".into())),
+            "heic" | "heif" => Err(Error::UnsupportedFormat("heic (not supported yet)".into())),
             other => Err(Error::UnsupportedFormat(other.to_string())),
         }
     }
